@@ -1,0 +1,5 @@
+CREATE OR REPLACE SEQUENCE Posts.SeqFilename
+	START = 44
+	INCREMENT BY 257 -- Inc parts of both bytes
+	CACHE 100
+	CYCLE;

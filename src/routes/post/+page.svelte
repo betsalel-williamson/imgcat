@@ -1,0 +1,31 @@
+<script lang="ts">
+	import { enhance } from '$app/forms';
+	let { data, form } = $props();
+</script>
+
+<h1>Post</h1>
+<form method="POST" enctype="multipart/form-data" use:enhance>
+<div class="box">
+	<h2>Upload Image</h2>
+	{#if form?.err_msg}<p class="error">{form.err_msg}</p>{/if}
+	<input type='file' name="upload-file"/>
+	<button type='submit' formaction="?/upload">Next</button>
+</div>
+<!--<div class="box">
+	<h2>Repost from ImgCat</h2>
+	<input type='url' name="repost-url" placeholder="ImgCat URL"/>
+	<button type='submit' formaction="?/repost">Next</button>
+</div>-->
+</form>
+
+<style>
+	.box {
+		display: inline-block;
+		margin: 10px;
+		padding: 10px;
+		background-color: var(--cbk1);
+	}
+	p.error {
+		color: red;
+	}
+</style>
