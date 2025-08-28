@@ -11,9 +11,13 @@
 
 	let mod_box = $state(false);
 	let is_fav = $state(false);
-	isFavPost([user_id, post.id]).then((onoff)=>{
-		is_fav = onoff;
-	});
+
+	// Only check if we're authenticated
+	if(user_id) {
+		isFavPost([user_id, post.id]).then((onoff)=>{
+			is_fav = onoff;
+		});
+	}
 
 	function make_pub(e) {
 		setPostVisibility([user_id, post.id, !post.is_public]).then(()=>{
