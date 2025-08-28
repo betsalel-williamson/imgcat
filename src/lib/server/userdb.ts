@@ -8,7 +8,7 @@ import { error } from '@sveltejs/kit';
 // watch for changes & reload files dynamically. But it will leak the pool.
 const db = mariadb.createPool({
 	idleTimeout: 60, //sec
-	connectionLimit: 5,
+	connectionLimit: 25,
 	acquireTimeout: 1000,
 	connectTimeout: 250,
 	queryTimeout: 2000,
