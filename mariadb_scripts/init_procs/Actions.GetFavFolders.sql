@@ -1,0 +1,31 @@
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE Actions.GetFavFolders(
+	p_user_id INT UNSIGNED
+)
+LANGUAGE SQL
+NOT DETERMINISTIC
+READS SQL DATA
+SQL SECURITY DEFINER
+BEGIN
+	SELECT id, folder_name
+	FROM Posts.UserFolders
+	WHERE user_id = p_user_id;
+END
+$$
+DELIMITER ;
+
+
+-- DEPRECATED... Migrate All UserActions to Actions schema
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE Posts.GetFavFolders(
+	p_user_id INT UNSIGNED
+)
+LANGUAGE SQL
+NOT DETERMINISTIC
+READS SQL DATA
+SQL SECURITY DEFINER
+BEGIN
+	CALL Actions.GetFavFolders(p_user_id);
+END
+$$
+DELIMITER ;

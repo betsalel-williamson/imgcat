@@ -1,0 +1,38 @@
+DELIMITER $$
+CREATE OR REPLACE FUNCTION Actions.IsFavMedia(
+	p_user_id INT UNSIGNED,
+	p_media_id INT UNSIGNED
+)
+RETURNS BOOL
+LANGUAGE SQL
+NOT DETERMINISTIC
+READS SQL DATA
+SQL SECURITY DEFINER
+BEGIN
+	RETURN EXISTS(
+		SELECT 1
+		FROM Posts.FavoriteMedia
+		WHERE user_id = p_user_id
+			AND media_id = p_media_id
+	);
+END
+$$
+DELIMITER ;
+
+
+-- DEPRECATED... Migrate All UserActions to Actions schema
+DELIMITER $$
+CREATE OR REPLACE FUNCTION Posts.IsFavMedia(
+	p_user_id INT UNSIGNED,
+	p_media_id INT UNSIGNED
+)
+RETURNS BOOL
+LANGUAGE SQL
+NOT DETERMINISTIC
+READS SQL DATA
+SQL SECURITY DEFINER
+BEGIN
+	RETURN Actions.IsFavMedia(p_user_id, p_media_id)
+END
+$$
+DELIMITER ;

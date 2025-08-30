@@ -1,10 +1,5 @@
-DROP TABLE IF EXISTS Posts.View;
-DROP TABLE IF EXISTS Posts.Vote;
-DROP TABLE IF EXISTS Posts.Report;
-
-
-
-CREATE TABLE Posts.View (
+-- TODO: Move this to the Actions schema
+CREATE TABLE IF NOT EXISTS Posts.View (
 	post_id
 		INT UNSIGNED NOT NULL
 		REFERENCES Posts.Post(id),
@@ -15,16 +10,14 @@ CREATE TABLE Posts.View (
 		INT UNSIGNED NOT NULL
 		DEFAULT 1,
 
-	PRIMARY KEY(post_id, user_id)
+	PRIMARY KEY(post_id, user_id),
+	INDEX(post_id),
+	INDEX(user_id)
 );
 
-CREATE INDEX IX_ViewsByPost
-	ON Posts.View(post_id);
-CREATE INDEX IX_ViewsByUser
-	ON Posts.View(user_id);
 
-
-CREATE TABLE Posts.Vote (
+-- TODO: Move this to the Actions schema
+CREATE TABLE IF NOT EXISTS Posts.Vote (
 	id
 		BIGINT UNSIGNED NOT NULL
 		AUTO_INCREMENT,
@@ -49,17 +42,15 @@ CREATE TABLE Posts.Vote (
 
 	PRIMARY KEY(id),
 	UNIQUE(post_id, user_id),
-	CONSTRAINT CHECK (type IN (0,1,2,3,4,5,6,7,8))
+	CONSTRAINT CHECK (type IN (0,1,2,3,4,5,6,7,8)),
+	INDEX(post_id),
+	INDEX(user_id)
 );
 
-CREATE INDEX IX_VotesByPost
-	ON Posts.Vote(post_id);
-CREATE INDEX IX_VotesByUser
-	ON Posts.Vote(user_id);
 
-
+-- TODO: Move this to the Actions schema
 -- This creates a dropdown menu for the user to pick an existing folder
-CREATE TABLE Posts.UserFolders (
+CREATE TABLE IF NOT EXISTS Posts.UserFolder (
 	id
 		INT UNSIGNED NOT NULL
 		AUTO_INCREMENT,
@@ -70,14 +61,13 @@ CREATE TABLE Posts.UserFolders (
 		TINYTEXT NOT NULL,
 
 	PRIMARY KEY(id),
-	UNIQUE KEY(user_id, name)
+	UNIQUE KEY(user_id, name),
+	INDEX(user_id)
 );
 
-CREATE INDEX IX_UserFolders
-	ON Posts.UserFolders(user_id);
 
-
-CREATE TABLE Posts.FavoritePost (
+-- TODO: Move this to the Actions schema
+CREATE TABLE IF NOT EXISTS Posts.FavoritePost (
 	post_id
 		INT UNSIGNED NOT NULL
 		REFERENCES Posts.Post(id),
@@ -86,19 +76,16 @@ CREATE TABLE Posts.FavoritePost (
 		REFERENCES UserDB.Account(id),
 	folder_id
 		INT UNSIGNED NULL
-		REFERENCES Posts.UserFolders(id),
+		REFERENCES Posts.UserFolder(id),
 
-	PRIMARY KEY(user_id, post_id)
+	PRIMARY KEY(user_id, post_id),
+	INDEX(user_id),
+	INDEX(folder_id)
 );
 
-CREATE INDEX IX_FavoritePost
-	ON Posts.FavoritePost(user_id);
-CREATE INDEX IX_FavoritePostByFolder
-	ON Posts.FavoritePost(folder_id);
 
-
-
-CREATE TABLE Posts.HiddenPost (
+-- TODO: Move this to the Actions schema
+CREATE TABLE IF NOT EXISTS Posts.HidePost (
 	post_id
 		INT UNSIGNED NOT NULL
 		REFERENCES Posts.Post(id),
@@ -109,18 +96,13 @@ CREATE TABLE Posts.HiddenPost (
 		TIMESTAMP NOT NULL
 		DEFAULT CURRENT_TIMESTAMP,
 
-	PRIMARY KEY(user_id, post_id)
+	PRIMARY KEY(user_id, post_id),
+	INDEX(user_id)
 );
 
-CREATE INDEX IX_HiddenPost
-	ON Posts.HiddenPost(user_id);
 
-
-CREATE TABLE Posts.
-
-
-
-CREATE TABLE Posts.Report (
+-- TODO: Move this to the Actions schema
+CREATE TABLE IF NOT EXISTS Posts.Report (
 	id
 		INT UNSIGNED NOT NULL
 		AUTO_INCREMENT,

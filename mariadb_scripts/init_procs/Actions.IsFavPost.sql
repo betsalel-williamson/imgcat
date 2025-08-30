@@ -1,0 +1,38 @@
+DELIMITER $$
+CREATE OR REPLACE FUNCTION Actions.IsFavPost(
+	p_user_id INT UNSIGNED,
+	p_post_id INT UNSIGNED
+)
+RETURNS BOOL
+LANGUAGE SQL
+NOT DETERMINISTIC
+READS SQL DATA
+SQL SECURITY DEFINER
+BEGIN
+	RETURN EXISTS(
+		SELECT 1
+		FROM Posts.FavoritePost
+		WHERE user_id = p_user_id
+			AND post_id = p_post_id
+	);
+END
+$$
+DELIMITER ;
+
+
+-- DEPRECATED... Migrate All UserActions to Actions schema
+DELIMITER $$
+CREATE OR REPLACE FUNCTION Posts.IsFavPost(
+	p_user_id INT UNSIGNED,
+	p_post_id INT UNSIGNED
+)
+RETURNS BOOL
+LANGUAGE SQL
+NOT DETERMINISTIC
+READS SQL DATA
+SQL SECURITY DEFINER
+BEGIN
+	RETURN Actions.IsFavPost(p_user_id, p_post_id);
+END
+$$
+DELIMITER ;

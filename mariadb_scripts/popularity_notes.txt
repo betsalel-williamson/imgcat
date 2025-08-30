@@ -1,0 +1,86 @@
+-- Popularity
+Func GetCurrentPopularitySlice() -> tinyint;
+Proc CalcPopularitySlice(day, slice);
+Proc GetFrontIds -> [id];
+Proc GetViralIds -> [id];
+Proc GetRecentIds -> [id];
+
+
+
+
+CREATE TABLE Posts.PopularityCache (
+	pop_date
+		DATE NOT NULL,
+	pop_slice -- 255 slices allows us to add a slice every 6m (if we want to)
+		TINYINT UNSIGNED NOT NULL,
+	post_id
+		INT UNSIGNED NOT NULL
+		REFERENCES Posts.Post(id),
+	total
+		INT SIGNED NOT NULL,
+
+	PRIMARY KEY(pop_date, pop_slice, post_id),
+	INDEX(pop_date, pop_slice)
+);
+
+DELIMITER $$
+CREATE OR REPLACE FUNCTION Posts.GetCurrentPopularitySlice()
+RETURNS TINYINT UNSIGNED
+NOT DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+BEGIN
+	-- Hardcode to half-hourly (for now?) MAX of 6min (with TINYINT)
+	-- Determine which 30m slice we're currently in
+	RETURN FLOOR(TIME_TO_SEC(CURTIME()) / 60 / 30);
+END
+$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE Posts.CalcPopularitySlice(
+	_date DATE,
+	_slice TINYINT
+)
+LANGUAGE SQL
+NOT DETERMINISTIC
+MODIFIES SQL DATA
+SQL SECURITY DEFINER
+BEGIN
+	-- For each popularity slice (ie. every 6, 10, 30 mins, w/e)
+	-- Grab a snapshot of the most popular recent posts. Details
+	-- are below, but these become viral-eligible.
+	--
+	-- But each individual user has the ability to set their own
+	-- preferences on content type. If they want more politics,
+	-- then a post that just missed the standard-viral mark, would
+	-- appear viral to them. If they want less politics, then any
+	-- politics post has to hit a higher threshold to be seen by
+	-- that user.
+	--
+	-- In this way, everyone sees the same posts, 
+	--
+	-- MATHY DETAILS...
+	--
+	-- The initial criteria (this will change):
+	-- At least 20 upvotes
+	-- At least a 75% upvote/downvote ratio (don't emphasize divisive content)
+	-- Must be Kid-friendly, Standard, or Lewd.
+	--     (make DAMN sure unauthenticated users will have lewd stuff filtered out)
+	-- This would be helpful to have a rolling statistics table... For example:
+	-- At this time the avg post has 30 votes, so a post with +20% is viral-eligible?
+	-- 
+	-- Then, pull all viral-eligible posts into this slice. With w/e size/qty limits.
+	-- The top 10 (non-lewd) posts become standard-viral, and show on the
+	-- unauthenticated viral page.
+	--
+	-- For the homepage algo, it'll run 5(?) slices behind, giving posts time
+	-- on the viral page. And whatever single (non-lewd) post was/is most popular,
+	-- that will Highlander its way to the homepage.
+END
+$$
+DELIMITER ;
+
+
+

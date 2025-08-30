@@ -1,0 +1,24 @@
+DELIMITER $$
+CREATE OR REPLACE FUNCTION Posts.GetMyVote(
+	p_post_id INT UNSIGNED,
+	p_user_id INT UNSIGNED
+)
+RETURNS TINYINT
+LANGUAGE SQL
+NOT DETERMINISTIC
+READS SQL DATA
+SQL SECURITY DEFINER
+BEGIN
+	DECLARE v_result TINYINT DEFAULT 0;
+
+	SELECT type
+	INTO v_result
+	FROM Posts.Vote
+	WHERE post_id = p_post_id
+		AND user_id = p_user_id
+	LIMIT 1;
+
+	RETURN v_result;
+END
+$$
+DELIMITER ;
