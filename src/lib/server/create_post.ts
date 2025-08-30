@@ -121,11 +121,11 @@ async function CreateSimplePost(data:any):int {
 	try {
 		conn = await getDbConn();
 		const response = await conn.query({
-			sql:"SELECT Posts.CreateSimplePost(?,?,?,?);",
+			sql:"SELECT Posts.GetLinkByPostId(Posts.CreateSimplePost(?,?,?,?));",
 			rowsAsArray: true
 		}, [data.user_id, data.title, data.media_id, data.description]);
 
-		return response[0][0];
+		return response[0][0]; // Returns the link
 	} catch(e) {
 		// If it's a custom error message, we can send it to the browser, otherwise no
 		console.log(e);
@@ -175,14 +175,14 @@ export async function CreatePostAndUpload(user_id:int, file:File, val:any):any {
 		});
 	}
 
-	const post_id = await CreateSimplePost({
+	const post_link = await CreateSimplePost({
 		'user_id': user_id,
 		'media_id': media_id
 		//'title': null,
 		//'description': null
 	});
 	
-	return post_id;
+	return post_link;
 }
 
 export async function CreatePostAndAttach(file:File, val:any):any {
