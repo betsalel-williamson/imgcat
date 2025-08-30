@@ -119,7 +119,7 @@ export const toggleFavPost = query(req_tuple([req_number(), req_number(), req_nu
 	try {
 		conn = await getDbConn();
 		return conn.query({
-				sql:"SELECT Posts.ToggleFavPost(?,?,?);",
+				sql:"SELECT Actions.ToggleFavPost(?,?,?);",
 				rowsAsArray: true
 			}, [user_id, post_id, folder_name])
 			.then((r)=>{
