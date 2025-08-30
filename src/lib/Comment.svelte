@@ -19,6 +19,7 @@
 	{#if user_id}
 		<div class='block'>
 		{#if reply_here}
+			<!-- TODO: Strip this out into its own control, so CommentBox & Comment can have a common control & codebase, using remote functions. -->
 			<button onclick={()=>{reply_here=false}}>Cancel</button>
 			<form method='POST' action='/view/{post_id}?/comment'>
 				<label for='comment'>Post a comment:</label>

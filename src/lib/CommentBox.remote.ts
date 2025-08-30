@@ -1,7 +1,12 @@
-import { number as req_number } from 'valibot';
+import {
+	strictTuple as req_tuple,
+	nullable as req_nullable,
+	number as req_number,
+	string as req_string
+} from 'valibot';
 import { error } from '@sveltejs/kit';
 import { query } from '$app/server';
-import { getDbConn } from '$lib/server/dbpool.ts';
+import { getDbConn, array as sql_array } from '$lib/server/dbpool.ts';
 
 // NOTE: This relies on Svelte Remote Functions, which is EXPERIMENTAL
 // But they seem custom-designed to support server-side functions for components
@@ -13,7 +18,7 @@ export const getPostComments = query(req_number(), async (post_id) => {
 	try {
 		conn = await getDbConn();
 		return conn.query({
-				sql:"CALL Posts.GetPostComments(?);"
+				sql:"CALL Comments.GetPostComments(?);"
 			}, [post_id])
 			.then((r)=>{
 				if(r[0]?.length > 0) {
@@ -53,4 +58,26 @@ export const getPostComments = query(req_number(), async (post_id) => {
 	} finally {
 		if(conn){await conn.release()}
 	}
+});
+
+
+export const createComment = query(req_tuple([
+		req_number(),
+		req_number(),
+		req_nullable(req_number()),
+		req_nullable(req_string()),
+		req_string()
+	]), async (args) => {
+	const user_id:number = parseInt(args[0]);
+	const post_id:number = parseInt(args[1]);
+	const reply_to:number|null = parseInt(args[2])||null;
+	// TODO: This is the CHAR(12) ref to add a picture along with your message
+	const img_link:string|null = null; // args[3] reserved
+	const message:string = args[4];
+
+	return sql_array(
+		"SELECT Posts.CreateComment(?,?,?,?,?);",
+		[user_id, post_id, reply_to, img_link, message],
+		(r)=>r[0][0]
+	);
 });

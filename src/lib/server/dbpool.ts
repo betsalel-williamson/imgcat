@@ -19,7 +19,86 @@ const db = mariadb.createPool({
 	password: process.env.DB_APP_PASS
 });
 
+const userDB = mariadb.createPool({
+	idleTimeout: 60, //sec
+	connectionLimit: 25,
+	acquireTimeout: 100,
+	connectTimeout: 100,
+	queryTimeout: 100,
+	leakDetectionTimeout: 1000,
+	host: (process.env.DB_USERDB_HOST),
+	port: Number(process.env.DB_USERDB_PORT),
+	database: (process.env.DB_USERDB_DB),
+	user: process.env.DB_USERDB_USER,
+	password: process.env.DB_USERDB_PASS
+});
 
 export async function getDbConn() {
 	return db.getConnection();
+}
+
+export async function getUserDbConn() {
+	return userDB.getConnection();
+}
+
+export async function query(sql:string, args:any, handler:(response:any)=>any) {
+	return db.getConnection()
+	.then((conn)=>{
+		return conn.query(sql, args)
+		.catch((e)=>{
+			console.log(e);
+			return null;
+		})
+		.finally(()=>{conn?.release()});
+	})
+	.then((response)=>{
+		if(response?.length > 0) {
+			return handler(response);
+		} else {
+			return null;
+		}
+	})
+	.catch((e)=>{
+		// NOTE: It is unsafe to log e['sql'] or e itself, because both print paramaters (aka: user passwords)
+		if(e['sqlState'] == '45000') {
+			error(500, e['sqlMessage'] || 'Unknown error');
+		} else if(e['errno'] == 1226) {
+			console.log(e);
+			error(500, 'The server is temporarially overloaded, please wait a moment and try again');
+		} else {
+			console.log(e);
+			error(500, 'Unknown server error');
+		}
+	});
+}
+
+export async function array(sql:string, args:any, handler) {
+	return db.getConnection()
+	.then((conn)=>{
+		return conn.query({sql:sql, rowsAsArray:true}, args)
+		.catch((e)=>{
+			console.log(e);
+			return null;
+		})
+		.finally(()=>{conn?.release()});
+	})
+	.then((response)=>{
+		if(response?.length > 0) {
+			return handler(response);
+		} else {
+			return null;
+		}
+	})
+	.catch((e)=>{
+		// NOTE: It is unsafe to log e['sql'] or e itself, because both print paramaters (aka: user passwords)
+		if(e['sqlState'] == '45000') {
+			error(500, e['sqlMessage'] || 'Unknown error');
+		} else if(e['sqlState'] == 'HY000') {
+			console.log(e);
+			error(500, 'The server is temporarially overloaded, please wait a moment and try again');
+		} else {
+			console.log(e['sqlMessage']);
+			error(500, 'Unknown server error');
+		}
+	});
 }

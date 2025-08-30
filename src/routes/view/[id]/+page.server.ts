@@ -26,6 +26,11 @@ export const load:PageServerLoad = async({ params, locals }) => {
 	}
 }
 
+// DEPRECATED: See CommentBox. We're moving comments into a common control
+// with remote functions, not this form. top-level comments are doing that now,
+// But nested replies are still using this.
+// NOTE: The benefit of forms is they work w/o JS, which is nice, but they're
+// not really compatible with Controls that need independent ajax stuff.
 export const actions:Actions = {
 	comment: async({params, locals, request}) => {
 		let data = await request.formData();
