@@ -55,7 +55,7 @@ NOT DETERMINISTIC
 MODIFIES SQL DATA
 SQL SECURITY DEFINER
 BEGIN
-	RETURNS Actions.ToggleFavPost(p_user_id, p_post_id, p_name);
+	RETURN Actions.ToggleFavPost(p_user_id, p_post_id, p_name);
 END
 $$
 DELIMITER ;

@@ -30,7 +30,7 @@ NOT DETERMINISTIC
 MODIFIES SQL DATA
 SQL SECURITY DEFINER
 BEGIN
-	SELECT Actions.CreateFavFolder(p_user_id, p_name);
+	RETURN Actions.CreateFavFolder(p_user_id, p_name);
 END
 $$
 DELIMITER ;

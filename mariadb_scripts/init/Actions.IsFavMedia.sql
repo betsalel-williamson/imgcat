@@ -32,7 +32,7 @@ NOT DETERMINISTIC
 READS SQL DATA
 SQL SECURITY DEFINER
 BEGIN
-	RETURN Actions.IsFavMedia(p_user_id, p_media_id)
+	RETURN Actions.IsFavMedia(p_user_id, p_media_id);
 END
 $$
 DELIMITER ;
