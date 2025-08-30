@@ -54,7 +54,7 @@ export const isFavPost = query(req_tuple([req_number(), req_number()]), async (a
 	try {
 		conn = await getDbConn();
 		return conn.query({
-				sql:"SELECT Posts.IsFavPost(?,?);",
+				sql:"SELECT Actions.IsFavPost(?,?);",
 				rowsAsArray: true
 			}, [user_id, post_id])
 			.then((r)=>{

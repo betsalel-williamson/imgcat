@@ -13,7 +13,7 @@
 	let is_fav = $state(false);
 
 	// Only check if we're authenticated
-	if(user_id) {
+	if(user_id && user_id != post.user_id) {
 		isFavPost([user_id, post.id]).then((onoff)=>{
 			is_fav = onoff;
 		});

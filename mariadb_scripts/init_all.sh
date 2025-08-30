@@ -8,7 +8,6 @@ cat init/userdb.tables.sql     # dep: n/a
 cat init/posts.tables.sql      # dep: userdb
 cat init/comments.tables.sql   # dep: posts
 cat init/fpcache.tables.sql    # dep: posts
-cat init/favorites.tables.sql  # dep: posts
 cat init/actions.tables.sql    # dep: favorites
 
 # Order doesn't matter. SPs are checked at runtime, not creation

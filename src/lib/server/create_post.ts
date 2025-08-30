@@ -184,7 +184,7 @@ export async function CreatePostAndUpload(user_id:int, file:File, val:any):any {
 		//'description': null
 	});
 	
-	return post_id;
+	return filename;
 }
 
 export async function CreatePostAndAttach(file:File, val:any):any {

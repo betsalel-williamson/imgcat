@@ -84,6 +84,23 @@ CREATE TABLE IF NOT EXISTS Posts.FavoritePost (
 );
 
 
+CREATE TABLE IF NOT EXISTS Posts.FavoriteMedia (
+	user_id
+		INT UNSIGNED NOT NULL
+		REFERENCES UserDB.Account(id),
+	media_id
+		INT UNSIGNED NOT NULL
+		REFERENCES Posts.Media(id),
+	folder_id
+		INT UNSIGNED NULL
+		REFERENCES Posts.UserFolder(id),
+
+	PRIMARY KEY(user_id, media_id),
+	INDEX(user_id),
+	INDEX(folder_id)
+);
+
+
 -- TODO: Move this to the Actions schema
 CREATE TABLE IF NOT EXISTS Posts.HidePost (
 	post_id
