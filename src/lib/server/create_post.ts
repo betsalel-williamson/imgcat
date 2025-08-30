@@ -124,8 +124,6 @@ async function CreateSimplePost(data:any):int {
 			sql:"SELECT Posts.CreateSimplePost(?,?,?,?);",
 			rowsAsArray: true
 		}, [data.user_id, data.title, data.media_id, data.description]);
-		
-		console
 
 		return response[0][0];
 	} catch(e) {
@@ -184,7 +182,7 @@ export async function CreatePostAndUpload(user_id:int, file:File, val:any):any {
 		//'description': null
 	});
 	
-	return filename;
+	return post_id;
 }
 
 export async function CreatePostAndAttach(file:File, val:any):any {
