@@ -59,7 +59,9 @@ BEGIN
 	-- politics post has to hit a higher threshold to be seen by
 	-- that user.
 	--
-	-- In this way, everyone sees the same posts, 
+	-- In this way, everyone sees the same posts, which were determined
+	-- by votes & real people, not engagement models driven to ragebait.
+	-- But users have their individual thresholds within that space.
 	--
 	-- MATHY DETAILS...
 	--
@@ -70,10 +72,11 @@ BEGIN
 	--     (make DAMN sure unauthenticated users will have lewd stuff filtered out)
 	-- This would be helpful to have a rolling statistics table... For example:
 	-- At this time the avg post has 30 votes, so a post with +20% is viral-eligible?
+	-- Something like Bollinger bands with a MA, or just avg counts over time
 	-- 
-	-- Then, pull all viral-eligible posts into this slice. With w/e size/qty limits.
-	-- The top 10 (non-lewd) posts become standard-viral, and show on the
-	-- unauthenticated viral page.
+	-- Then, pull all viral-eligible posts into this slice. With some size limit.
+	-- The top 10 (non-lewd) posts become standard-viral, and show on the viral
+	-- page (unauthenticated). So every 6,10,30,w/e mins, you'd get a new batch.
 	--
 	-- For the homepage algo, it'll run 5(?) slices behind, giving posts time
 	-- on the viral page. And whatever single (non-lewd) post was/is most popular,

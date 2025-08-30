@@ -1,0 +1,57 @@
+--
+-- Proposed schema, but not implemented yet
+--
+--CREATE TABLE Mods.ModReport (
+--	id
+--		BIGINT UNSIGNED NOT NULL
+--		AUTO_INCREMENT,
+--	upload_time
+--		TIMESTAMP NOT NULL
+--		DEFAULT CURRENT_TIMESTAMP,
+--	modify_time
+--		TIMESTAMP NOT NULL
+--		DEFAULT CURRENT_TIMESTAMP,
+--	is_open
+--		BOOL NOT NULL
+--		DEFAULT TRUE,
+--	post_id
+--		INT UNSIGNED NOT NULL
+--		REFERENCES Posts.Post(id),
+--	user_id
+--		INT UNSIGNED NULL
+--		REFERENCES UserDB.Account(id),
+--	reason_code
+--		TINYINT UNSIGNED NOT NULL
+--		DEFAULT 0,
+--
+--	PRIMARY KEY(id),
+--	INDEX(upload_time, is_open),
+--	INDEX(modify_time, is_open),
+--	INDEX(post_id, is_open),
+--	INDEX(user_id, is_open),
+--	INDEX(reason_code, is_open)
+--);
+--
+--
+--
+--CREATE TABLE Mods.ModReview (
+--	id
+--		BIGINT UNSIGNED NOT NULL
+--		AUTO_INCREMENT,
+--	report_id
+--		BIGINT UNSIGNED NOT NULL
+--		REFERENCES (Mods.ModReport),
+--	review_time
+--		TIMESTAMP NOT NULL
+--		DEFAULT CURRENT_TIMESTAMP,
+--	mod_user_id
+--		INT UNSIGNED NULL
+--		REFERENCES UserDB.Account(id),
+--	action_taken
+--		-- TBD
+--		TINYINT UNSIGNED NOT NULL,
+--
+--	PRIMARY KEY(id)
+--);
+--
+--

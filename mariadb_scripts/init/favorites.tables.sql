@@ -11,11 +11,9 @@ CREATE TABLE Posts.UserFolders (
 		TINYTEXT NOT NULL,
 
 	PRIMARY KEY(id),
-	UNIQUE KEY(user_id, name)
+	UNIQUE KEY(user_id, name),
+	INDEX(user_id)
 );
-
-CREATE INDEX IX_UserFolders
-	ON Posts.UserFolders(user_id);
 
 
 CREATE TABLE Posts.FavoritePost (
@@ -29,14 +27,10 @@ CREATE TABLE Posts.FavoritePost (
 		INT UNSIGNED NULL
 		REFERENCES Posts.UserFolders(id),
 
-	PRIMARY KEY(user_id, post_id)
+	PRIMARY KEY(user_id, post_id),
+	INDEX(user_id),
+	INDEX(folder_id)
 );
-
-CREATE INDEX IX_FavoritePost
-	ON Posts.FavoritePost(user_id);
-CREATE INDEX IX_FavoritePostByFolder
-	ON Posts.FavoritePost(folder_id);
-
 
 
 CREATE TABLE Posts.FavoriteMedia (
@@ -51,9 +45,7 @@ CREATE TABLE Posts.FavoriteMedia (
 		REFERENCES Posts.UserFolders(id),
 
 	PRIMARY KEY(user_id, media_id)
+	INDEX(user_id),
+	INDEX(folder_id),
 );
 
-CREATE INDEX IX_FavoriteMedia
-	ON Posts.FavoriteMedia(user_id);
-CREATE INDEX IX_FavoriteMediaByFolder
-	ON Posts.FavoriteMedia(folder_id);

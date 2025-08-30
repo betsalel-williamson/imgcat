@@ -1,7 +1,3 @@
-DROP TABLE IF EXISTS UserDB.AccountClaim;
-DROP TABLE IF EXISTS UserDB.Claim;
-DROP TABLE IF EXISTS UserDB.Account;
-
 CREATE TABLE IF NOT EXISTS UserDB.Account (
 	id
 		INT UNSIGNED NOT NULL
@@ -54,6 +50,7 @@ CREATE TABLE IF NOT EXISTS UserDB.Claim (
 	UNIQUE KEY(name)
 );
 
+-- NOTE: None of this stuff is implemented yet
 INSERT INTO UserDB.Claim(name, description) VALUES
 	('is_unverified', 'The email is unverified, strictly limiting what they can do'),
 	('is_post_banned', 'Temporary ban on posting'),
