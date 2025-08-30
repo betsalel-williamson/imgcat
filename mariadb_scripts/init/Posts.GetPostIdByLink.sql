@@ -11,8 +11,8 @@ BEGIN
 	RETURN (
 		SELECT id
 		FROM Posts.Post
-		WHERE link = p_link;
-	)
+		WHERE link = p_link
+	);
 END
 $$
 DELIMITER ;
