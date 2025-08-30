@@ -1,7 +1,7 @@
 
 === Step 1 ===
 init_users.sql needs to be edited, adding your passwords, then run like so:
-> ./init_users.sh | mariadb -h [your host] -u [admin user] -p
+> mariadb -h [your host] -u [admin user] -p < init_users.sql
 It'll prompt for your mariadb root password, and create 4 users we'll need
 
 === Step 2 ===
