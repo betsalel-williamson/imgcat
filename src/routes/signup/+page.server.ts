@@ -54,15 +54,30 @@ export const actions:Actions = {
 		if(message){return {success:false, message}}
 
 		// If we specify an IDP server, use that, else do a local request
-		const login_response = await fetch((process.env.IDP_SERVER || '') + '/auth/signup', {
+		const signup_response = await fetch((process.env.IDP_SERVER || '') + '/auth/signup', {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify(fd)
 		}).then(r=>r.json());
 
-		if(!login_response.success) {
-			return {success:false, message:login_response['message']};
+		console.log(signup_response)
+
+		// Display an error message, if needed
+		if(!signup_response.success) {
+			return {success:false, message:signup_response['message']};
 		}
+
+		// If we created an account, use this data to now log in
+		const login_response = await fetch((process.env.IDP_SERVER || '') + '/auth/login', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({
+				e:fd.email,
+				p:fd.password
+			})
+		}).then(r=>r.json());
+
+		// TODO: This needs code reuse with /login
 
 		if(login_response['a'] && login_response['r']) {
 			// Before we create cookies & redirect, we want to prime the security mechanism,

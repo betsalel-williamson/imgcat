@@ -9,14 +9,14 @@ import { getUserDbConn } from '$lib/server/dbpool.ts';
 export async function LogIn(user_or_email:string, password:string):any {
 	return getUserDbConn()
 	.then((conn)=>{
-		console.log('has conn');
+		//console.log('has conn');
 		return conn.query({
 			sql:"CALL UserDB.GetLoginData(UserDB.GetLoginId(?,?));"
 		}, [user_or_email, password])
 		.finally(()=>{conn?.release()});
 	})
 	.then((response)=>{
-		console.log('has resp');
+		//console.log('has resp');
 		if(response[0]?.length > 0) {
 			let result = {};
 
@@ -33,16 +33,16 @@ export async function LogIn(user_or_email:string, password:string):any {
 		}
 	})
 	.catch((e)=>{
-		console.log('has error');
+		//console.log('has error');
 		console.log(e);
 		// NOTE: It is unsafe to log e['sql'] or e itself, because both print paramaters (aka: user passwords)
 		if(e['sqlState'] == '45000') {
 			error(500, e['sqlMessage'] || 'Unknown error');
 		} else if(e['errno'] == 45028) {
-			console.log(e);
+			//console.log(e);
 			error(500, 'The server is temporarially overloaded, please wait a moment and try again');
 		} else {
-			console.log(e['sqlMessage']);
+			//console.log(e['sqlMessage']);
 			error(500, 'Unknown server error');
 		}
 	});
@@ -131,21 +131,20 @@ export async function CreateAccount(fd:any):int|string {
 		.finally(()=>{conn?.release()});
 	})
 	.then((response)=>{
-		if(d[0]?.length > 0) {
-			return d[0][0];
+		if(response[0]?.length > 0) {
+			return response[0][0];
 		} else {
 			return null;
 		}
 	})
 	.catch((e)=>{
 		// NOTE: It is unsafe to log e['sql'] or e itself, because both print paramaters (aka: user passwords)
+		console.log(e);
 		if(e['sqlState'] == '45000') {
 			error(500, e['sqlMessage'] || 'Unknown error');
 		} else if(e['sqlState'] == 'HY000') {
-			console.log(e);
 			error(500, 'The server is temporarially overloaded, please wait a moment and try again');
 		} else {
-			console.log(e['sqlMessage']);
 			error(500, 'Unknown server error');
 		}
 	});

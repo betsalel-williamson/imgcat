@@ -1,4 +1,4 @@
-import { json, error } from '@sveltejs/kit';
+import { json, error, redirect } from '@sveltejs/kit';
 import { CreateAuthJwt, CreateRefreshJwt, GetUserData } from '$lib/server/jwtserver.ts';
 import { LogIn, CreateAccount } from '$lib/server/userdb.ts';
 
@@ -14,7 +14,7 @@ export async function POST({ request, clientAddress }) {
 	const data = await request.json();
 	
 	const new_user_id = await CreateAccount(data);
-	console.log(dt + ", New account, " + data.username + ", " + data.location);
+	console.log(dt + ", New account, " + new_user_id + ", " + data.username + ", " + data.location);
 
 	///////////////////////////////////////////////////
 	// TODO: DO NOT DO THIS...
@@ -27,18 +27,23 @@ export async function POST({ request, clientAddress }) {
 	// https://svelte.dev/docs/kit/adapter-node#Environment-variables-ADDRESS_HEADER-and-XFF_DEPTH
 	//let client_ip = clientAddress || '::ffff:127.0.0.1';
 
-
-	const user_data = await LogIn(data.email, data.password);
-	if(user_data === null){
-		console.log(dt+', Login Failure, Incorrect password, '+email);
-		return json({success:false, message:"Incorrect password"})
-	}
-
-	// Now that we've got user_data, we need to sign a JWT and return it
-	console.log(dt+', Login Success, '+data.email+', '+user_data['user_id']);
 	return json({
 		success:true,
-		a: CreateAuthJwt(user_data),
-		r: CreateRefreshJwt(user_data)
+		new_user_id
 	});
+	//redirect(303, '/login');
+
+	//const user_data = await LogIn(data.email, data.password);
+	//if(user_data === null){
+	//	console.log(dt+', Login Failure, Incorrect password, '+email);
+	//	return json({success:false, message:"Incorrect password"})
+	//}
+	//
+	//// Now that we've got user_data, we need to sign a JWT and return it
+	//console.log(dt+', Login Success, '+data.email+', '+user_data['user_id']);
+	//return json({
+	//	success:true,
+	//	a: CreateAuthJwt(user_data),
+	//	r: CreateRefreshJwt(user_data)
+	//});
 }
