@@ -27,7 +27,7 @@ if(!appdb) {
 					// Build a pool and assign it to appdb
 					appdb = mariadb.createPool({
 						idleTimeout: 60, //sec
-						connectionLimit: 100,
+						connectionLimit: 10,
 						acquireTimeout: 1000,
 						connectTimeout: 250,
 						queryTimeout: 2000,
@@ -80,7 +80,7 @@ if(!userdb) {
 					// Build a pool and assign it to userdb
 					userdb = mariadb.createPool({
 						idleTimeout: 60, //sec
-						connectionLimit: 25,
+						connectionLimit: 5,
 						acquireTimeout: 1000,
 						connectTimeout: 250,
 						queryTimeout: 1000,
@@ -147,7 +147,7 @@ export async function getDbConn() {
 }
 
 export async function getUserDbConn() {
-	return userDB?.getConnection();
+	return userdb?.getConnection();
 }
 
 export async function query(sql:string, args:any, handler:(response:any)=>any) {
@@ -168,14 +168,12 @@ export async function query(sql:string, args:any, handler:(response:any)=>any) {
 		}
 	})
 	.catch((e)=>{
+		console.error(e);
 		if(e['sqlState'] == '45000') {
-			console.error(e);
 			error(500, e['sqlMessage'] || 'Unknown error');
 		} else if(e['errno'] == 1226) {
-			console.error(e);
 			error(500, 'The server is temporarially overloaded, please wait a moment and try again');
 		} else {
-			console.error(e);
 			error(500, 'Unknown server error');
 		}
 	});
@@ -199,14 +197,12 @@ export async function array(sql:string, args:any, handler) {
 		}
 	})
 	.catch((e)=>{
+		console.error(e);
 		if(e['sqlState'] == '45000') {
-			console.error(e);
 			error(500, e['sqlMessage'] || 'Unknown error');
 		} else if(e['sqlState'] == 'HY000') {
-			console.error(e);
 			error(500, 'The server is temporarially overloaded, please wait a moment and try again');
 		} else {
-			console.error(e['sqlMessage']);
 			error(500, 'Unknown server error');
 		}
 	});

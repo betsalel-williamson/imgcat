@@ -34,6 +34,7 @@ export async function LogIn(user_or_email:string, password:string):any {
 	})
 	.catch((e)=>{
 		console.log('has error');
+		console.log(e);
 		// NOTE: It is unsafe to log e['sql'] or e itself, because both print paramaters (aka: user passwords)
 		if(e['sqlState'] == '45000') {
 			error(500, e['sqlMessage'] || 'Unknown error');
