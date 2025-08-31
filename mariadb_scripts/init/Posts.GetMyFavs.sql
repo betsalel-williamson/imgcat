@@ -19,7 +19,7 @@ BEGIN
 		FROM Posts.FavoritePost a
 		INNER JOIN Posts.Post b
 			ON a.post_id = b.id
-		LEFT JOIN Posts.UserFolders c
+		LEFT JOIN Posts.UserFolder c
 			ON a.folder_id = c.id
 		WHERE a.user_id = p_user_id
 		OFFSET p_pg_start ROWS
