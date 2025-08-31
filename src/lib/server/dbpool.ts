@@ -17,6 +17,21 @@ const db = mariadb.createPool({
 	database: (process.env.DB_APP_DB),
 	user: process.env.DB_APP_USER,
 	password: process.env.DB_APP_PASS
+}).then((pool)=>{
+	// Test a query to see if it work
+	const conn = pool.getConnection();
+	const res = conn.query('SELECT Posts.GetFilename()');
+	if(res[0]) {
+		return pool;
+	} else {
+		console.log('ERROR: Could not query DB using the main connection pool, there may be a misconfiguration');
+		return pool;
+	}
+}).catch((e)=>{
+	console.log('Error creating the main app pool, using variables:');
+	console.log('Host: ', process.env.DB_APP_HOST || '- null -');
+	console.log('User: ', process.env.DB_APP_USER || '- null -');
+	console.log('Pass: ', process.env.DB_APP_PASS?'- exists -':'- null -' );
 });
 
 const userDB = mariadb.createPool({
@@ -31,6 +46,21 @@ const userDB = mariadb.createPool({
 	database: (process.env.DB_USERDB_DB),
 	user: process.env.DB_USERDB_USER,
 	password: process.env.DB_USERDB_PASS
+}).then((pool)=>{
+	// Test a query to see if it work
+	const conn = pool.getConnection();
+	const res = conn.query("SELECT UserDB.IsUsernameFree('whatever')");
+	if(res[0]) {
+		return pool;
+	} else {
+		console.log('ERROR: Could not query DB using the UserDB connection pool, there may be a misconfiguration');
+		return pool;
+	}
+}).catch((e)=>{
+	console.log('Error creating the user login pool, using variables:');
+	console.log('Host: ', process.env.DB_USERDB_HOST || '- null -');
+	console.log('User: ', process.env.DB_USERDB_USER || '- null -');
+	console.log('Pass: ', process.env.DB_USERDB_PASS?'- exists -':'- null -' );
 });
 
 export async function getDbConn() {
