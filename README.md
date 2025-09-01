@@ -1,43 +1,37 @@
 # ImgCat
 
-Welcome to ImgCat, an open-source, meme-sharing community focused on users!
+ImgCat is an open-source, meme-sharing community focused on users!
 
-Over the years, the internet has gotten prickly: Social media pushes toxicity, corporations strip-mine our personal data, and the sites we grew up with sold out. Our aim is to build something better, simpler, and less-toxic - built around users and the community we build, together.
-
-## Our Principles
-
+Our core principles:
 *   **Data privacy:** We apply EU-level privacy to all users.
 *   **Simple feeds:** We use votes & views, not engagement models.
 *   **Content controls:** Users decide the content they want to see.
 *   **Moderation:** Users have powerful tools to shape their community.
 
-## What Makes Us Different
+Open-sourcing our code is an important step in building trust with the community
 
-The community. We are building robust controls allowing YOU to control your own feed, see the content you want, and ignore what you don't.
-
-## What's the Catch?
-
-The user-interface and tools are designed for sharing content, commenting, and interacting with the community. We can store albums of photos like Photobucket or Dropbox, but those are better tools for that purpose. We are community-driven.
-
-## Join the Waiting List
-
-Join our waiting list, and we'll let you know when ImgCat is ready:
-[Google Form](https://forms.gle/C2KgdejyEhpG25uW8)
-
-## How Can I Help?
-
-*   **As a User:** We're still building the site. Join the waiting list, and we'll let you know when it's ready.
-*   **As a Dev/QA:** The code is open-source (MIT License) and we've created a [Discord server](https://discord.gg/WnSbabYsKr) for teams to collaborate.
-*   **As a Moderator:** Please join the Discord. We would like your opinions on our moderation tools before they're built.
-*   **As a DevOps, DBA, Graphic Designer, Legal/Compliance Expert, and anyone who can click a mouse:** We need you too, and have collaborative spaces setup.
 
 ## Documentation
 
+*   [About the project](./docs/about.md)
 *   [Development Resources](./docs/development-resources.md)
 *   [Frequently Asked Questions](./docs/faqs.md)
 *   [Funding Model](./docs/funding-model.md)
-*   [Building a Better Site](./docs/building-a-better-site.md)
 *   [Code of Conduct](./CODE_OF_CONDUCT.md)
+
+
+## Quick Build Setup
+1. Install MariaDB, Node, and setup an S3 cloud provider
+2. Follow /mariadb_scripts/readme.txt
+	* NOTE: init_users.sql must be manually edited, to add passwords
+3. Use TEMPLATE.env as a baseline
+4. Add both FE users to the .env file
+5. Setup certs for JWT validation, add path to .env
+	* openssl genpkey -algorithm ed25519 -out id_jwtsign.pvt
+	* openssl pkey -in id_jwtsign.pvt -pubout -out id_jwtsign.pub
+6. Add S3 credentials to .env file
+7. Run "npm run dev"
+
 
 ## Contributions
 
