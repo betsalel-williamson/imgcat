@@ -60,7 +60,7 @@ representative at an online or offline event.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the ImgCat project maintainers responsible for enforcement at
-security@imgcat.com.
+###EMAIL-HERE###.
 All complaints will be reviewed and investigated promptly and fairly.
 
 All ImgCat project maintainers are obligated to respect the privacy and security of the
