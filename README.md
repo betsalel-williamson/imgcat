@@ -20,6 +20,10 @@ Open-sourcing our code is an important step in building trust with the community
 *   [Code of Conduct](./CODE_OF_CONDUCT.md)
 
 
+## Docker build
+
+Instructions for installing and running locally with Docker are contained in [BUILD.md](./BUILD.md)
+
 ## Quick Build Setup
 1. Install MariaDB, Node, and setup an S3 cloud provider
 2. Follow /mariadb_scripts/readme.txt

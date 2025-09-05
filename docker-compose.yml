@@ -1,0 +1,42 @@
+services:
+  db:
+    image: mariadb
+    restart: always
+    volumes:
+      - ./mariadb_scripts/init:/docker-entrypoint-initdb.d
+      - ./db_data:/var/lib/mysql
+      - ./common:/common
+    ports:
+      - 3306:3306
+    environment:
+      - MARIADB_RANDOM_ROOT_PASSWORD=true
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      target: dev
+    restart: always
+    # Once we hit a version>=1.0, the `npm i` here should be replaced with `npm ci`.
+    # Optional debate: the entire could be shortened to `npm run dev --inspect=0.0.0.0:9229`
+    # since we `npm i` in the Dockerfile
+    # but I don't know enough about Svelte to optimize this
+    command: bash -c "npm i && npm run dev --inspect=0.0.0.0:9229 -- --host"
+    volumes:
+      - ./docker/common:/common
+      - .:/app/
+      - /app/node_modules/
+    ports:
+      # default runtime port
+      - 5173:5173
+      # debugging port
+      - 9229:9229
+    env_file:
+      - dev.env
+    depends_on:
+      db:
+        condition: service_healthy
