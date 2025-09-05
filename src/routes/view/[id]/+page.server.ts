@@ -11,10 +11,10 @@ export const load:PageServerLoad = async({ params, locals }) => {
 	// Whatever the reason, this user cannot access this content
 	if(!post){return null}
 	
-	// TODO: Pull from an ENVVAR
 	// Internally, we're pulling from the 'link_v1' column
+	let BASE_URL = process.env.CFR2_PUBLIC_LINK
 	for(let i in post.img) {
-		post.img[i].link = 'https://i.imgcat.io/' + post.img[i].link
+		post.img[i].link = BASE_URL + post.img[i].link
 	}
 
 	if(post) {
