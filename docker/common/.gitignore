@@ -1,0 +1,5 @@
+# This gitignore exists to maintain an empty folder
+# and ensure that nothing from this folder is pushed by accident
+# since it holds certs by default
+
+!.gitignore
