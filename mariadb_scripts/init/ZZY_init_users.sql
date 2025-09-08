@@ -17,5 +17,3 @@ CREATE USER imgcat_system
 IDENTIFIED BY <password here>
 WITH
 	MAX_STATEMENT_TIME 5;
-
-# Moved GRANT block to ./init/init_perms.sql

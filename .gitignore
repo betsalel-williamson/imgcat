@@ -15,3 +15,9 @@ node_modules
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Database volume store
+./db_data/*
+
+# IDE folders
+.vscode
