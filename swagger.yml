@@ -1,0 +1,214 @@
+openapi: 3.0.4
+info:
+  title: ImgCat API Contract
+  description: This is the documentation of the API contract for the backend of ImgCat 0.0.1
+  version: 0.0.1
+tags:
+  - name: Auth
+    description: All about authentication
+  - name: Chat
+    description: Chatting with other users. Nothing here yet!
+  - name: Login
+    description: Just a form here, not sure how to document this one
+  - name: Meme
+    description: Build-a-meme
+  - name: MyFavs
+    description: My favorite pictures
+  - name: Post
+    description: Post an image
+  - name: Profile
+    description: Filled out from $props() and not consumed.
+  - name: View
+    description: Viewing a post (image)
+
+
+paths:
+  /auth/login:
+    post: 
+      tags: 
+        - Auth
+      summary: Authenticate as a user
+      description: Authenticate and login as a specified user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reqlogin'
+        required: true
+      responses:
+        '200': 
+          description: Sucessful login
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/goodlogin'
+  /auth/namefree:
+    post: 
+      tags: 
+        - Auth
+      summary: Check name status.
+      description: Verify that a potential username is not taken.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/namefree'
+        required: true
+      responses:
+        '200': 
+          description: Successful request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/namefreeresponse'
+  /auth/signup:
+    post:
+      tags: 
+        - Auth
+      summary: Sign Up
+      description: Sign up a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signup'
+        required: true
+      responses:
+        '200':
+          description: Successful request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signupresponse'
+  /post/upload:
+    post:
+      tags: 
+        - Post
+      summary: Upload an image
+      description: Sign up a new user
+      requestBody:
+        content:
+          image/*:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        '200':
+          description: Successful request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signupresponse'
+  # this is going to be required, but is currently prepopulated due to sveltekit
+  # /view/{id}:
+  #   get:
+  #     tags:
+  #       - View
+  #     summary: View a post
+  #     description: Load a page with the post and related information.
+  #     parameters:
+  #       - name: id
+  #         in: path
+  #         description: image id
+  #         required: true
+  #         schema:
+  #           type: string
+  #           example: Qi1meM_EkmhG
+  #     responses:
+  #       '200':
+  #         description: Successful view
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/viewpost'
+          
+components:
+  schemas:
+    goodlogin:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        a:
+          type: string
+          example: JWT
+        r:
+          type: string
+          example: REFRESH
+    reqlogin:
+      type: object
+      properties:
+        e:
+          type: string
+          example: "test@example.com"
+        p:
+          type: string
+          example: "hunter2"
+    namefree:
+      type: object
+      properties:
+        username:
+          type: string
+          example: Bobtheweak
+    namefreeresponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        is_free:
+          type: boolean
+          example: true
+    signup:
+      type: object
+      properties:
+        username:
+          type: string
+          example: Bobtheweak
+        location:
+          type: string
+          example: "United States of America"
+        email:
+          type: string
+          example: test@example.com
+        age:
+          type: integer
+          example: 35
+        password:
+          type: string
+          example: hunter2
+    signupresponse:
+      type: object
+      properties:
+        success: 
+          type: boolean
+          example: true
+        new_user_id:
+          type: string
+          example: 1
+    viewpost:
+      type: object
+      properties:
+        post:
+          type: object
+          properties:
+            img:
+              type: array
+              items:
+                type: object
+                properties:
+                  link:
+                    type: string
+                    example: "https://imgcat.com/123abc"
+                  title:
+                    type: string 
+                    example: "World's Cutest Kitten!"
+                  username:
+                    type: string
+                    example: Bobtheweak
+                  time:
+                    type: string
+                    example: "oh how I wish this was a unix timestamp"
+
