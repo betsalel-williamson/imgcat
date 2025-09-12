@@ -172,7 +172,7 @@ components:
           example: "United States of America"
         email:
           type: string
-          example: test@example.com"
+          example: test@example.com
         age:
           type: integer
           example: 35
@@ -201,7 +201,7 @@ components:
                 properties:
                   link:
                     type: string
-                    example: https://imgcat.com/123abc
+                    example: "https://imgcat.com/123abc"
                   title:
                     type: string 
                     example: "World's Cutest Kitten!"
