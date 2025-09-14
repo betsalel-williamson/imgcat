@@ -5,8 +5,8 @@ FROM base AS dev
 
 # npm ci would be better to use here, but that's not available until we reach version 1.0 or greater
 # until we reach that point, package-lock and cache have to be loaded RW 
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,rw,source=package-lock.json,target=package-lock.json \
+RUN --mount=type=bind,source=frontend/package.json,target=package.json \
+    --mount=type=bind,rw,source=frontend/package-lock.json,target=package-lock.json \
     --mount=type=cache,target=/root/.npm \
     npm i --include=dev
 
