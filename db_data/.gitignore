@@ -1,4 +1,0 @@
-# This gitignore exists to maintain an empty db_data folder
-# and ensure that nothing from this folder is pushed by accident
-
-!.gitignore

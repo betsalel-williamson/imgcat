@@ -1,24 +1,24 @@
 services:
   db:
-    image: mariadb
+    image: mariadb:lts
     restart: always
     volumes:
-      - ./mariadb_scripts/init:/docker-entrypoint-initdb.d
+      - ./database/mariadb_scripts/init:/docker-entrypoint-initdb.d
       - ./db_data:/var/lib/mysql
-      - ./common:/common
+      - ./docker/common:/common
     ports:
       - 3306:3306
     environment:
       - MARIADB_RANDOM_ROOT_PASSWORD=true
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
       interval: 10s
       timeout: 5s
       retries: 3
   frontend:
     build:
+      dockerfile: frontend/Dockerfile
       context: .
-      dockerfile: Dockerfile.frontend
       target: dev
     restart: always
     # Once we hit a version>=1.0, the `npm i` here should be replaced with `npm ci`.
@@ -28,7 +28,7 @@ services:
     command: bash -c "npm i && npm run dev --inspect=0.0.0.0:9229 -- --host"
     volumes:
       - ./docker/common:/common
-      - .:/app/
+      - ./frontend:/app/
       - /app/node_modules/
     ports:
       # default runtime port
@@ -37,6 +37,26 @@ services:
       - 9229:9229
     env_file:
       - dev.env
+    depends_on:
+      backend-file-upload:
+        condition: service_healthy
+  backend-file-upload:
+    container_name: file_upload
+    build:
+      context: backend/file_upload/
+      target: dev
+    volumes:
+      - ./docker/common:/common
+      - ./backend/file_upload:/app/
+    ports:
+      - 9001:9001
+    env_file:
+      - dev.env
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://127.0.0.1:9001/healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     depends_on:
       db:
         condition: service_healthy

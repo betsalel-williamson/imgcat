@@ -1,7 +1,7 @@
 node_modules
 
 # Output
-/.svelte-kit
+.svelte-kit
 /build
 .npmrc
 
@@ -17,7 +17,21 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 # Database volume store
-./db_data/*
+db_data
 
 # IDE folders
 .vscode
+
+# Added by cargo
+
+backend/*/target
+
+docker/common/
+
+# certs
+*.pub
+*.pvt
+
+# other stuff
+dev.env
+dev copy.env

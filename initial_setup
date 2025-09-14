@@ -1,0 +1,25 @@
+#!/bin/bash
+
+REPLACEMENT_LINES=(
+    "GENERATED_DB_PASSWORD_JWT"
+    "GENERATED_DB_PASSWORD_POSTS"
+    "GENERATED_DB_PASSWORD_MODS"
+    "GENERATED_DB_PASSWORD_SYSTEM")
+
+# Don't dirty our template
+cp TEMPLATE.env dev.env
+
+# Generate some (weak) passwords for the dev database
+# and put the passwords where they're needed.
+
+for line in "${REPLACEMENT_LINES[@]}"
+do
+    password=$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 10)
+    sed -i -e "s/${line}/${password}/gi" "dev.env"
+    sed -i -e "s/${line}/'${password}'/gi" "database/mariadb_scripts/init/ZZY_init_users.sql"
+done
+
+# Generate some JWT keys and put them in the docker common folder
+
+openssl genpkey -algorithm ed25519 -out docker/common/id_jwtsign.pvt
+openssl pkey -in docker/common/id_jwtsign.pvt -pubout -out docker/common/id_jwtsign.pub
